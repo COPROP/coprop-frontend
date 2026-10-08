@@ -1,0 +1,82 @@
+name: Tarea
+description: Trabajo planificado - funcionalidad, tarea técnica o investigación
+labels: ["phase:mvp"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Esta es la forma que tienen las tareas del backlog: **alcance**, **criterios de
+        aceptación** y la **referencia** al análisis. Los criterios son lo que se comprueba
+        al cerrar, así que conviene que sean verificables y no intenciones.
+
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Por qué
+      description: Una o dos frases sobre qué problema resuelve. Si es obvio, se puede omitir.
+      placeholder: El propietario no puede ver cuánto debe sin llamar a la administración.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alcance
+    attributes:
+      label: Alcance
+      description: Qué entra, en viñetas. Tan importante es decir qué queda fuera.
+      placeholder: |
+        - Pantalla de estado de cuenta con el saldo y el detalle por periodo.
+        - Estados de carga y de error, y vacío cuando no hay deuda.
+        - Responsive a partir de 360px.
+    validations:
+      required: true
+
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      description: >
+        Condiciones comprobables. Evitar "funciona bien" o "está documentado" sin decir dónde.
+      placeholder: |
+        - El saldo mostrado coincide con el que devuelve `GET /api/v1/me/estado-de-cuenta`.
+        - Con la API caída, la pantalla muestra un error accionable y no una tabla vacía.
+    validations:
+      required: true
+
+  - type: input
+    id: referencia
+    attributes:
+      label: Referencia
+      description: Sección del análisis u otro documento donde está decidido.
+      placeholder: análisis §11.3
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - area:backend
+        - area:frontend
+        - area:mobile
+        - area:infra
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo
+      options:
+        - type:feature
+        - type:chore
+        - type:spike
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Al crear la tarea, añadir a mano el **milestone**, la **prioridad**
+        (`priority:p0` si bloquea el MVP, `priority:p1` si no) y, si no es del MVP,
+        cambiar `phase:mvp` por `phase:fase2`.
