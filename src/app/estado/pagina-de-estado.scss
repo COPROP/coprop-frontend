@@ -1,0 +1,21 @@
+.estado {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+  max-width: 40rem;
+  padding: 2rem;
+
+  &__ok strong {
+    color: #1a7f37;
+  }
+
+  &__error {
+    border-left: 3px solid #cf222e;
+    padding-left: 0.75rem;
+  }
+
+  &__detalle {
+    color: #656d76;
+    font-size: 0.875rem;
+  }
+}

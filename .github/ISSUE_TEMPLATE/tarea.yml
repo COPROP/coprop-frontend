@@ -1,6 +1,6 @@
 name: Tarea
 description: Trabajo planificado - funcionalidad, tarea técnica o investigación
-labels: ["phase:mvp"]
+labels: ['phase:mvp']
 body:
   - type: markdown
     attributes:
