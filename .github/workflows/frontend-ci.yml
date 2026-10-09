@@ -1,0 +1,53 @@
+name: CI del frontend
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Un push nuevo sobre la misma rama cancela la corrida anterior: no tiene sentido gastar
+# minutos verificando un commit que ya quedo atras.
+concurrency:
+  group: frontend-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    name: Lint, build y tests
+    runs-on: ubuntu-latest
+    # El backend se puso 10 minutos por el criterio de su issue. Aqui se deja el mismo limite por
+    # la misma razon: si alguna vez se pasa, la corrida falla y queda a la vista en lugar de
+    # degradarse en silencio.
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # La version sale de .nvmrc, no esta escrita aqui: asi local y CI no pueden separarse sin
+      # que alguien lo note. `cache: npm` guarda ~/.npm segun el package-lock.json.
+      - name: Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # `ci` y no `install`: respeta el lockfile al pie de la letra y falla si no cuadra, en lugar
+      # de resolver versiones nuevas por su cuenta y hacer que CI pruebe algo distinto a lo local.
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # El compilador de Angular en modo estricto detecta bastante mas que el linter, asi que el
+      # build no es redundante con el paso anterior.
+      - name: Build
+        run: npm run build
+
+      # --no-watch explicito: Vitest ya lo deduce por no haber TTY, pero depender de esa deteccion
+      # es la clase de cosa que un dia deja la corrida colgada hasta el timeout.
+      - name: Tests
+        run: npm test -- --no-watch
