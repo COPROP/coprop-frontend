@@ -1,0 +1,17 @@
+# Finales de linea LF en el arbol de trabajo, en todas las maquinas.
+#
+# Sin esto, con `core.autocrlf=true` --que es lo normal en Windows-- git deja los archivos con
+# CRLF al hacer checkout, y Prettier, que espera LF por defecto, marca el repositorio entero como
+# mal formateado. El sintoma es desconcertante: `npm run format:check` falla en local en 32
+# archivos y pasa en CI, porque el runner es Linux.
+#
+# Se fija aqui y no en la configuracion de Prettier porque el problema no es de formato: es que el
+# archivo en disco no es el que esta en el repositorio.
+* text=auto eol=lf
+
+# Binarios: que git no intente convertir nada.
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff binary
+*.woff2 binary

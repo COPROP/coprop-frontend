@@ -3,9 +3,10 @@ node_modules
 .angular
 package-lock.json
 
-# Las convenciones del repositorio son identicas en coprop-backend, coprop-frontend y
-# coprop-mobile a proposito. Si Prettier las reformatea aqui, los tres repos divergen por una
-# diferencia de comillas y cualquier comparacion futura se llena de ruido.
+# Las convenciones del repositorio son comunes a coprop-backend, coprop-frontend y coprop-mobile:
+# los tres comparten el mismo texto salvo la seccion de comandos, que es propia de cada uno. Si
+# Prettier reformatea aqui lo compartido --alineando tablas, cambiando comillas-- los tres dejan
+# de parecerse y cualquier comparacion futura se llena de ruido que no es un cambio real.
 .github
 .githooks
 CONTRIBUTING.md
