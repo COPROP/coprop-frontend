@@ -56,11 +56,11 @@ no era el plan, era que los repos fueran públicos.
 
 `main` está protegido en los tres:
 
-| Repositorio       | PR obligatorio | Push directo           | Check obligatorio        |
-| ----------------- | -------------- | ---------------------- | ------------------------ |
-| `coprop-backend`  | sí             | lo rechaza el servidor | `Build, formato y tests` |
-| `coprop-frontend` | sí             | lo rechaza el servidor | `Lint, build y tests`    |
-| `coprop-mobile`   | sí             | lo rechaza el servidor | aún sin CI               |
+| Repositorio | PR obligatorio | Push directo | Check obligatorio |
+|---|---|---|---|
+| `coprop-backend` | sí | lo rechaza el servidor | `Build, formato y tests` |
+| `coprop-frontend` | sí | lo rechaza el servidor | `Lint, build y tests` |
+| `coprop-mobile` | sí | lo rechaza el servidor | aún sin CI |
 
 Además: no se admite force-push, no se puede borrar `main`, las conversaciones del PR deben
 quedar resueltas antes de mezclar, y en el backend la rama debe estar al día con `main` para que
@@ -90,12 +90,12 @@ derivado y a qué issue. Es lo que evita que una deuda se pierda al cerrar la pe
 
 ### Etiquetas
 
-| Grupo     | Valores                                                                |
-| --------- | ---------------------------------------------------------------------- |
-| Área      | `area:backend`, `area:frontend`, `area:mobile`, `area:infra`           |
-| Tipo      | `type:feature`, `type:chore`, `type:spike`, `type:bug`                 |
+| Grupo | Valores |
+|---|---|
+| Área | `area:backend`, `area:frontend`, `area:mobile`, `area:infra` |
+| Tipo | `type:feature`, `type:chore`, `type:spike`, `type:bug` |
 | Prioridad | `priority:p0` bloquea el MVP, `priority:p1` importante pero no bloquea |
-| Fase      | `phase:mvp`, `phase:fase2`                                             |
+| Fase | `phase:mvp`, `phase:fase2` |
 
 Las investigaciones usan la plantilla de Tarea con `type:spike`, y sus criterios de aceptación
 describen el documento que debe quedar, no el código.
