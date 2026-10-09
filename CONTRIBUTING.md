@@ -56,11 +56,11 @@ no era el plan, era que los repos fueran públicos.
 
 `main` está protegido en los tres:
 
-| Repositorio | PR obligatorio | Push directo | Check obligatorio |
-|---|---|---|---|
-| `coprop-backend` | sí | lo rechaza el servidor | `Build, formato y tests` |
-| `coprop-frontend` | sí | lo rechaza el servidor | aún sin CI |
-| `coprop-mobile` | sí | lo rechaza el servidor | aún sin CI |
+| Repositorio       | PR obligatorio | Push directo           | Check obligatorio        |
+| ----------------- | -------------- | ---------------------- | ------------------------ |
+| `coprop-backend`  | sí             | lo rechaza el servidor | `Build, formato y tests` |
+| `coprop-frontend` | sí             | lo rechaza el servidor | aún sin CI               |
+| `coprop-mobile`   | sí             | lo rechaza el servidor | aún sin CI               |
 
 Además: no se admite force-push, no se puede borrar `main`, las conversaciones del PR deben
 quedar resueltas antes de mezclar, y en el backend la rama debe estar al día con `main` para que
@@ -90,12 +90,12 @@ derivado y a qué issue. Es lo que evita que una deuda se pierda al cerrar la pe
 
 ### Etiquetas
 
-| Grupo | Valores |
-|---|---|
-| Área | `area:backend`, `area:frontend`, `area:mobile`, `area:infra` |
-| Tipo | `type:feature`, `type:chore`, `type:spike`, `type:bug` |
+| Grupo     | Valores                                                                |
+| --------- | ---------------------------------------------------------------------- |
+| Área      | `area:backend`, `area:frontend`, `area:mobile`, `area:infra`           |
+| Tipo      | `type:feature`, `type:chore`, `type:spike`, `type:bug`                 |
 | Prioridad | `priority:p0` bloquea el MVP, `priority:p1` importante pero no bloquea |
-| Fase | `phase:mvp`, `phase:fase2` |
+| Fase      | `phase:mvp`, `phase:fase2`                                             |
 
 Las investigaciones usan la plantilla de Tarea con `type:spike`, y sus criterios de aceptación
 describen el documento que debe quedar, no el código.
@@ -104,13 +104,52 @@ Cada issue lleva además su **milestone** (`M0 - Fundaciones` … `M6`, o `Fase 
 
 ## Antes de abrir el PR
 
-Este repositorio todavía no tiene esqueleto: llega con el issue #1, y con él los comandos de
-build, lint y test, que se documentan aquí en ese momento.
+```bash
+npm run lint
+npm run build
+npm test
+npm run format:check
+```
 
-Hasta entonces, la regla que ya aplica es la de siempre: lo que se afirme en la sección de
-verificación del PR tiene que haberse corrido de verdad.
+- **`lint`** es ESLint con las reglas de `angular-eslint`, sobre TypeScript y plantillas.
+- **`build`** compila con el compilador de Angular, que en modo estricto detecta bastante más que
+  el linter.
+- **`test`** corre los tests unitarios con **Vitest** sobre jsdom, que es el runner por defecto en
+  Angular 22. No es Karma.
+- **`format:check`** verifica Prettier; `npm run format` lo arregla.
 
-Para referencia, en `coprop-backend` el comando es `./gradlew build`, y allí hay un aviso que ya
-costó una vez: **puede dar exit 0 sin correr un solo test** si Gradle considera todo al día. Vale
-la pena comprobar si la herramienta de este repositorio tiene la misma trampa de caché antes de
-confiar en un verde.
+Angular guarda caché de compilación en `.angular/cache`. Si un resultado no cuadra con lo que
+esperas, bórrala y repite antes de darle más vueltas.
+
+### Levantar la aplicación
+
+```bash
+npm start
+```
+
+Sirve en `http://localhost:4200` y **reenvía `/api` y `/actuator` al backend del 8080** (ver
+`proxy.conf.json`). Por eso el navegador ve un solo origen y CORS no entra en juego; el backend no
+lleva configuración de CORS para desarrollo. Necesitas el backend levantado:
+
+```bash
+cd ../coprop-backend
+docker compose up -d
+./gradlew bootRun
+```
+
+Un aviso de la experiencia: **`bootRun` no muere al cerrar la terminal que lo lanzó**. Si el 8080
+aparece ocupado, hay un proceso viejo; `Get-NetTCPConnection -LocalPort 8080 -State Listen` dice
+cuál.
+
+### Convenciones del código
+
+- **Carpetas por dominio, no por tipo de archivo.** `src/app/estado/` tiene junto su página, su
+  servicio, su plantilla y sus tests. No hay una carpeta `services/` con todos los servicios del
+  mundo.
+- **`src/app/nucleo/`** es la excepción: lo transversal que no pertenece a ningún dominio, como el
+  interceptor de errores.
+- **Rutas con carga diferida siempre** (`loadComponent`). Una ruta sin ella tiene que justificarse.
+- **Los errores del backend no se tocan a mano.** El interceptor los convierte en `ErrorDeApi`, que
+  siempre trae `codigo`. Se ramifica por ese `codigo`, nunca por el texto del mensaje.
+- **El código en español, lo que genera el framework en inglés.** `app.config.ts`, `main.ts` y
+  `environment.ts` conservan su nombre; lo que escribimos nosotros no.
