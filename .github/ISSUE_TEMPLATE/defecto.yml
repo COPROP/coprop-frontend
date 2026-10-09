@@ -1,6 +1,6 @@
 name: Defecto
 description: Algo que debería funcionar y no funciona
-labels: ['type:bug']
+labels: ["type:bug"]
 body:
   - type: markdown
     attributes:
