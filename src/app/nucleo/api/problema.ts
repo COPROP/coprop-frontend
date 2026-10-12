@@ -36,9 +36,15 @@ export interface ErrorDeCampo {
  * llegó a contestar —el servidor está caído, no hay red, el proxy no responde—. Así el resto de la
  * aplicación siempre tiene un código con el que ramificar, en vez de tener que distinguir entre un
  * error del backend y un hueco.
+ *
+ * `CUERPO_ILEGIBLE` es el único con 400, y en la práctica no debería llegarle a un usuario: se
+ * devuelve cuando el cuerpo no es JSON válido, que es un defecto del cliente. Un valor que el
+ * backend no admite —un enum desconocido, un UUID mal escrito— **no** usa este código: sale como
+ * `VALIDACION` con su lista en `errores`, igual que cualquier otro fallo de validación.
  */
 export type CodigoDeError =
   | 'VALIDACION'
+  | 'CUERPO_ILEGIBLE'
   | 'NO_ENCONTRADO'
   | 'CONFLICTO'
   | 'REGLA_DE_NEGOCIO'
