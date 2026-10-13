@@ -41,6 +41,12 @@ export interface ErrorDeCampo {
  * devuelve cuando el cuerpo no es JSON válido, que es un defecto del cliente. Un valor que el
  * backend no admite —un enum desconocido, un UUID mal escrito— **no** usa este código: sale como
  * `VALIDACION` con su lista en `errores`, igual que cualquier otro fallo de validación.
+ *
+ * `SIN_CUENTA` y `SIN_PERMISO` son los dos 403 y **no se presentan igual**. `SIN_PERMISO` es de
+ * quien tiene cuenta y le falta rol: ahí cabe decirle a quién pedirlo. `SIN_CUENTA` es de quien se
+ * autenticó pero en COPROP no es nadie —entró con Google y nadie lo invitó, o su cuenta está
+ * bloqueada—, así que lo único que puede hacer es pedir su invitación: reintentar no le sirve de
+ * nada y ofrecerle volver a entrar lo deja dando vueltas.
  */
 export type CodigoDeError =
   | 'VALIDACION'
@@ -50,5 +56,6 @@ export type CodigoDeError =
   | 'REGLA_DE_NEGOCIO'
   | 'NO_AUTENTICADO'
   | 'SIN_PERMISO'
+  | 'SIN_CUENTA'
   | 'INTERNO'
   | 'SIN_RESPUESTA';
