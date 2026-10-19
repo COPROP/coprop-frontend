@@ -8,7 +8,7 @@ import { toApiError } from './api-error';
  * Se hace en un interceptor y no en cada servicio porque así es imposible saltárselo: una pantalla
  * nueva no puede olvidarse de traducir el error, porque nunca ve el `HttpErrorResponse` original.
  */
-export const errorInterceptor: HttpInterceptorFn = (peticion, siguiente) =>
-  siguiente(peticion).pipe(
+export const errorInterceptor: HttpInterceptorFn = (request, next) =>
+  next(request).pipe(
     catchError((failure: HttpErrorResponse) => throwError(() => toApiError(failure))),
   );

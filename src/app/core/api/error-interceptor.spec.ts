@@ -26,11 +26,11 @@ describe('errorInterceptor', () => {
    * Se suscribe y devuelve una promesa con el fallo. Hay que llamarla antes de responder en el
    * servidor de mentira: si nadie esta suscrito, el flush no tiene a quien entregar.
    */
-  function captureError<T>(fuente: Observable<T>): Promise<ApiError> {
-    return new Promise((resolver, rechazar) => {
-      fuente.subscribe({
-        next: () => rechazar(new Error('se esperaba un fallo y la peticion salio bien')),
-        error: (failure: ApiError) => resolver(failure),
+  function captureError<T>(source: Observable<T>): Promise<ApiError> {
+    return new Promise((resolve, reject) => {
+      source.subscribe({
+        next: () => reject(new Error('se esperaba un fallo y la peticion salio bien')),
+        error: (failure: ApiError) => resolve(failure),
       });
     });
   }
