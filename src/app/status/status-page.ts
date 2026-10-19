@@ -15,7 +15,7 @@ import { StatusService } from './status-service';
   styleUrl: './status-page.scss',
 })
 export class StatusPage implements OnInit {
-  private readonly servicio = inject(StatusService);
+  private readonly service = inject(StatusService);
 
   protected readonly loading = signal(true);
   protected readonly status = signal<string | null>(null);
@@ -28,9 +28,9 @@ export class StatusPage implements OnInit {
   protected check(): void {
     this.loading.set(true);
     this.error.set(null);
-    this.servicio.check().subscribe({
-      next: (respuesta) => {
-        this.status.set(respuesta.status);
+    this.service.check().subscribe({
+      next: (response) => {
+        this.status.set(response.status);
         this.loading.set(false);
       },
       error: (failure: ApiError) => {
