@@ -2,7 +2,7 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { interceptorDeErrores } from './nucleo/api/interceptor-de-errores';
+import { errorInterceptor } from './core/api/error-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -10,6 +10,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     // El interceptor va aqui, una sola vez: asi ninguna pantalla puede olvidarse de traducir un
     // error del backend, porque nunca ve el HttpErrorResponse original.
-    provideHttpClient(withFetch(), withInterceptors([interceptorDeErrores])),
+    provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
   ],
 };

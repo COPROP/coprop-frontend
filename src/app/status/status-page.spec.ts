@@ -1,23 +1,23 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { interceptorDeErrores } from '../nucleo/api/interceptor-de-errores';
-import { PaginaDeEstado } from './pagina-de-estado';
+import { errorInterceptor } from '../core/api/error-interceptor';
+import { StatusPage } from './status-page';
 
-describe('PaginaDeEstado', () => {
-  let fixture: ComponentFixture<PaginaDeEstado>;
+describe('StatusPage', () => {
+  let fixture: ComponentFixture<StatusPage>;
   let servidor: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PaginaDeEstado],
+      imports: [StatusPage],
       providers: [
-        provideHttpClient(withInterceptors([interceptorDeErrores])),
+        provideHttpClient(withInterceptors([errorInterceptor])),
         provideHttpClientTesting(),
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PaginaDeEstado);
+    fixture = TestBed.createComponent(StatusPage);
     servidor = TestBed.inject(HttpTestingController);
   });
 
@@ -43,7 +43,7 @@ describe('PaginaDeEstado', () => {
     fixture.detectChanges();
 
     expect(texto()).toContain('No se pudo contactar con el servidor');
-    expect(texto()).toContain('SIN_RESPUESTA');
+    expect(texto()).toContain('NO_RESPONSE');
   });
 
   it('muestra el traceId cuando el backend lo manda, que es lo que busca soporte', () => {
@@ -51,11 +51,11 @@ describe('PaginaDeEstado', () => {
 
     servidor.expectOne('/actuator/health').flush(
       {
-        type: 'https://coprop.bo/errores/interno',
+        type: 'https://coprop.bo/errors/internal',
         title: 'Error interno',
         status: 500,
         detail: 'Ocurrio un error inesperado.',
-        codigo: 'INTERNO',
+        code: 'INTERNAL',
         traceId: 'abc-123',
       },
       { status: 500, statusText: 'Internal Server Error' },

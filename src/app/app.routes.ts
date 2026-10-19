@@ -8,10 +8,10 @@ import { Routes } from '@angular/router';
  */
 export const routes: Routes = [
   {
-    path: 'estado',
-    loadComponent: () => import('./estado/pagina-de-estado').then((m) => m.PaginaDeEstado),
+    path: 'status',
+    loadComponent: () => import('./status/status-page').then((m) => m.StatusPage),
     title: 'Estado del backend',
   },
-  { path: '', pathMatch: 'full', redirectTo: 'estado' },
-  { path: '**', redirectTo: 'estado' },
+  { path: '', pathMatch: 'full', redirectTo: 'status' },
+  { path: '**', redirectTo: 'status' },
 ];

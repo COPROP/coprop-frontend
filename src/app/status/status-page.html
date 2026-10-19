@@ -1,0 +1,24 @@
+<section class="status">
+  <h1>Estado del backend</h1>
+
+  @if (loading()) {
+    <p class="status__loading">Consultando…</p>
+  } @else if (status(); as value) {
+    <p class="status__ok">
+      El backend responde: <strong>{{ value }}</strong>
+    </p>
+  } @else if (error(); as failure) {
+    <div class="status__error" role="alert">
+      <p>{{ failure.message }}</p>
+      <!-- El codigo es lo que identifica el fallo; el traceId es lo que busca soporte. -->
+      <p class="status__detail">
+        Codigo: <code>{{ failure.code }}</code>
+        @if (failure.traceId) {
+          · traceId: <code>{{ failure.traceId }}</code>
+        }
+      </p>
+    </div>
+  }
+
+  <button type="button" (click)="check()" [disabled]="loading()">Volver a consultar</button>
+</section>
