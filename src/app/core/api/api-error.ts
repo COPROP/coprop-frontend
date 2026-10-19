@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { CodigoDeError, ErrorDeCampo, Problema } from './problema';
+import { ErrorCode, ApiFieldError, Problem } from './problem';
 
 /**
  * Lo que recibe cualquier parte de la aplicación cuando una petición falla.
@@ -7,21 +7,21 @@ import { CodigoDeError, ErrorDeCampo, Problema } from './problema';
  * Existe para que nadie tenga que mirar un `HttpErrorResponse` ni adivinar si el cuerpo trae
  * `problem+json`: después del interceptor, todo fallo es uno de estos y **siempre tiene `codigo`**.
  */
-export class ErrorDeApi extends Error {
+export class ApiError extends Error {
   constructor(
-    readonly codigo: CodigoDeError,
-    readonly estado: number,
+    readonly code: ErrorCode,
+    readonly status: number,
     override readonly message: string,
     readonly traceId?: string,
-    readonly errores: readonly ErrorDeCampo[] = [],
+    readonly errors: readonly ApiFieldError[] = [],
   ) {
     super(message);
-    this.name = 'ErrorDeApi';
+    this.name = 'ApiError';
   }
 
   /** El mensaje que el backend dejó para ese campo, si lo rechazó. */
-  mensajeDe(campo: string): string | undefined {
-    return this.errores.find((error) => error.campo === campo)?.mensaje;
+  messageOf(field: string): string | undefined {
+    return this.errors.find((error) => error.field === field)?.message;
   }
 }
 
@@ -33,29 +33,29 @@ export class ErrorDeApi extends Error {
  * caído o no hay red. En los tres hay que devolver un `codigo`, o cada pantalla acabaría
  * inventándose su propio manejo.
  */
-export function aErrorDeApi(fallo: HttpErrorResponse): ErrorDeApi {
-  if (fallo.status === 0) {
-    return new ErrorDeApi(
-      'SIN_RESPUESTA',
+export function toApiError(failure: HttpErrorResponse): ApiError {
+  if (failure.status === 0) {
+    return new ApiError(
+      'NO_RESPONSE',
       0,
       'No se pudo contactar con el servidor. Revisa tu conexión.',
     );
   }
 
-  const problema = fallo.error as Partial<Problema> | null;
-  if (problema?.codigo) {
-    return new ErrorDeApi(
-      problema.codigo,
-      fallo.status,
-      problema.detail ?? problema.title ?? 'La operación falló.',
-      problema.traceId,
-      problema.errores ?? [],
+  const problem = failure.error as Partial<Problem> | null;
+  if (problem?.code) {
+    return new ApiError(
+      problem.code,
+      failure.status,
+      problem.detail ?? problem.title ?? 'La operación falló.',
+      problem.traceId,
+      problem.errors ?? [],
     );
   }
 
-  return new ErrorDeApi(
-    'INTERNO',
-    fallo.status,
+  return new ApiError(
+    'INTERNAL',
+    failure.status,
     'El servidor respondió de una forma que no esperábamos.',
   );
 }

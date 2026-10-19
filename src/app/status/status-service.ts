@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 /** Lo que devuelve el actuator del backend. Trae más campos; aquí solo interesa el estado. */
-export interface EstadoDelBackend {
+export interface BackendStatus {
   readonly status: string;
 }
 
 @Injectable({ providedIn: 'root' })
-export class ServicioDeEstado {
+export class StatusService {
   private readonly http = inject(HttpClient);
 
   /**
@@ -19,7 +19,7 @@ export class ServicioDeEstado {
    * y en producción el frontend se sirve tras el mismo dominio que la API. En los dos casos el
    * navegador ve el mismo origen y CORS no entra en juego.
    */
-  consultar(): Observable<EstadoDelBackend> {
-    return this.http.get<EstadoDelBackend>(`${environment.baseApi}/actuator/health`);
+  check(): Observable<BackendStatus> {
+    return this.http.get<BackendStatus>(`${environment.baseApi}/actuator/health`);
   }
 }

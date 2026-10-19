@@ -5,7 +5,7 @@
  * API». Lo que importa aquí: **se ramifica por `codigo`, nunca por `title` ni por `detail`**, que
  * son texto para una persona y pueden cambiar sin aviso.
  */
-export interface Problema {
+export interface Problem {
   /** Identifica el tipo de error. No se resuelve por red. */
   readonly type: string;
   /** Título legible. Para mostrar, no para decidir. */
@@ -16,17 +16,17 @@ export interface Problema {
   /** Ruta que falló. */
   readonly instance?: string;
   /** La parte estable del contrato. */
-  readonly codigo: CodigoDeError;
+  readonly code: ErrorCode;
   /** El mismo identificador que llevan los logs del backend para esta petición. */
   readonly traceId?: string;
   /** Solo en errores de validación: un objeto por campo rechazado. */
-  readonly errores?: readonly ErrorDeCampo[];
+  readonly errors?: readonly ApiFieldError[];
 }
 
-export interface ErrorDeCampo {
-  readonly campo: string;
-  readonly codigo: string;
-  readonly mensaje: string;
+export interface ApiFieldError {
+  readonly field: string;
+  readonly code: string;
+  readonly message: string;
 }
 
 /**
@@ -48,14 +48,14 @@ export interface ErrorDeCampo {
  * bloqueada—, así que lo único que puede hacer es pedir su invitación: reintentar no le sirve de
  * nada y ofrecerle volver a entrar lo deja dando vueltas.
  */
-export type CodigoDeError =
-  | 'VALIDACION'
-  | 'CUERPO_ILEGIBLE'
-  | 'NO_ENCONTRADO'
-  | 'CONFLICTO'
-  | 'REGLA_DE_NEGOCIO'
-  | 'NO_AUTENTICADO'
-  | 'SIN_PERMISO'
-  | 'SIN_CUENTA'
-  | 'INTERNO'
-  | 'SIN_RESPUESTA';
+export type ErrorCode =
+  | 'VALIDATION'
+  | 'UNREADABLE_BODY'
+  | 'NOT_FOUND'
+  | 'CONFLICT'
+  | 'BUSINESS_RULE'
+  | 'NOT_AUTHENTICATED'
+  | 'NO_PERMISSION'
+  | 'NO_ACCOUNT'
+  | 'INTERNAL'
+  | 'NO_RESPONSE';
